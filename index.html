@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Ching Reading - Ancient Wisdom, Modern Insight</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #e8e8e8;
+        }
+        .title-font {
+            font-family: 'Cinzel', serif;
+        }
+        .hexagram-line {
+            height: 8px;
+            margin: 8px 0;
+            border-radius: 4px;
+            transition: all 0.8s ease;
+        }
+        .line-solid {
+            background: linear-gradient(90deg, #ffd700, #ffed4a);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+        .line-broken {
+            display: flex;
+            gap: 20%;
+        }
+        .line-broken::before, .line-broken::after {
+            content: '';
+            width: 40%;
+            height: 8px;
+            background: linear-gradient(90deg, #c0a060, #e0c878);
+            border-radius: 4px;
+            box-shadow: 0 0 15px rgba(192, 160, 96, 0.4);
+        }
+        .fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .pulse-glow {
+            animation: pulseGlow 2s infinite;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.6); }
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #8b6914, #d4af37, #8b6914);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+        }
+        .category-btn {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 215, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        .category-btn:hover, .category-btn.selected {
+            background: rgba(255, 215, 0, 0.15);
+            border-color: rgba(255, 215, 0, 0.6);
+            transform: translateY(-2px);
+        }
+        .number-input {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            font-size: 24px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            color: #ffd700;
+            border-radius: 8px;
+        }
+        .number-input:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-2xl mx-auto">
+        <!-- Header -->
+        <header class="text-center mb-8 fade-in">
+            <h1 class="title-font text-3xl md:text-4xl text-amber-300 mb-2">THE BOOK OF CHANGES</h1>
+            <p class="text-lg text-amber-100/80 italic">3000 years of wisdom • The original binary system</p>
+        </header>
+
+        <!-- Step 1: Set Intention -->
+        <div id="step1" class="card rounded-2xl p-8 fade-in">
+            <h2 class="title-font text-2xl text-amber-300 mb-6 text-center">Set Your Intention</h2>
+            
+            <div class="text-center mb-8">
+                <p class="text-lg mb-4 italic text-amber-100/90">Take three deep breaths...</p>
+                <p class="mb-6">Think clearly about your question. The I Ching speaks best to open minds seeking guidance, not simple yes-or-no answers.</p>
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-amber-200 mb-2">Your question:</label>
+                <textarea id="question" rows="3" 
+                    class="w-full p-4 bg-black/30 border-2 border-amber-500/30 rounded-xl text-amber-100 text-lg focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30"
+                    placeholder="e.g., 'What should I understand about my career direction right now?'"></textarea>
+            </div>
+
+            <div class="text-center">
+                <button onclick="goToStep2()" class="btn-primary title-font text-lg px-8 py-3 rounded-xl text-amber-900 font-bold">
+                    I'm Ready
+                </button>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-amber-500/20 text-center text-sm text-amber-200/60">
+                <p>"The I Ching does not tell your fortune. It reveals the pattern of the moment."</p>
+                <p class="italic mt-1">— Carl Jung, who used the I Ching in his psychology practice</p>
+            </div>
+        </div>
+
+        <!-- Step 2: Choose Category -->
+        <div id="step2" class="card rounded-2xl p-8 hidden">
+            <h2 class="title-font text-2xl text-amber-300 mb-6 text-center">What Guidance Do You Seek?</h2>
+            
+            <p class="text-center mb-8">Choose the area of your life this reading relates to:</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                <button class="category-btn p-4 rounded-xl text-left" onclick="selectCategory('career', this)">
+                    <span class="text-2xl mb-2 block">🧑‍💼</span>
+                    <span class="title-font text-amber-300">Career & Work</span>
+                    <p class="text-sm text-amber-200/70 mt-1">Professional direction, projects, work relationships</p>
+                </button>
+                
+                <button class="category-btn p-4 rounded-xl text-left" onclick="selectCategory('relationship', this)">
+                    <span class="text-2xl mb-2 block">❤️</span>
+                    <span class="title-font text-amber-300">Relationships & Love</span>
+                    <p class="text-sm text-amber-200/70 mt-1">Romance, partnership, family connections</p>
+                </button>
+                
+                <button class="category-btn p-4 rounded-xl text-left" onclick="selectCategory('finance', this)">
+                    <span class="text-2xl mb-2 block">💰</span>
+                    <span class="title-font text-amber-300">Finance & Money</span>
+                    <p class="text-sm text-amber-200/70 mt-1">Investments, career decisions, financial planning</p>
+                </button>
+                
+                <button class="category-btn p-4 rounded-xl text-left" onclick="selectCategory('health', this)">
+                    <span class="text-2xl mb-2 block">🏥</span>
+                    <span class="title-font text-amber-300">Health & Wellbeing</span>
+                    <p class="text-sm text-amber-200/70 mt-1">Physical vitality, mental balance, lifestyle</p>
+                </button>
+                
+                <button class="category-btn p-4 rounded-xl text-left" onclick="selectCategory('general', this)">
+                    <span class="text-2xl mb-2 block">🧭</span>
+                    <span class="title-font text-amber-300">General Life Guidance</span>
+                    <p class="text-sm text-amber-200/70 mt-1">Overall direction, personal growth, life path</p>
+                </button>
+                
+                <button class="category-btn p-4 rounded-xl text-left" onclick="selectCategory('decision', this)">
+                    <span class="text-2xl mb-2 block">❓</span>
+                    <span class="title-font text-amber-300">Specific Decision</span>
+                    <p class="text-sm text-amber-200/70 mt-1">Yes/no guidance, choice between options</p>
+                </button>
+            </div>
+
+            <div class="text-center">
+                <button onclick="goToStep3()" class="btn-primary title-font text-lg px-8 py-3 rounded-xl text-amber-900 font-bold disabled:opacity-50" id="categoryNextBtn" disabled>
+                    Continue
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 3: Choose Numbers -->
+        <div id="step3" class="card rounded-2xl p-8 hidden">
+            <h2 class="title-font text-2xl text-amber-300 mb-6 text-center">Connect With Your Reading</h2>
+            
+            <p class="text-center mb-6">The I Ching speaks through numbers. Think of your question, then enter 6 numbers between 0 and 9.</p>
+
+            <div class="flex justify-center gap-4 mb-8">
+                <input type="number" min="0" max="9" class="number-input" id="n1">
+                <input type="number" min="0" max="9" class="number-input" id="n2">
+                <input type="number" min="0" max="9" class="number-input" id="n3">
+                <input type="number" min="0" max="9" class="number-input" id="n4">
+                <input type="number" min="0" max="9" class="number-input" id="n5">
+                <input type="number" min="0" max="9" class="number-input" id="n6">
+            </div>
+
+            <div class="text-center text-sm text-amber-200/60 mb-6">
+                <p>Each number builds one line of your hexagram, from bottom to top</p>
+                <p class="italic mt-1">Gottfried Leibniz, inventor of binary code, found the I Ching encoded the exact same mathematical principles</p>
+            </div>
+
+            <div class="text-center">
+                <button onclick="goToStep4()" class="btn-primary title-font text-lg px-8 py-3 rounded-xl text-amber-900 font-bold">
+                    Reveal My Hexagram
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 4: Building Animation -->
+        <div id="step4" class="card rounded-2xl p-8 hidden">
+            <h2 class="title-font text-2xl text-amber-300 mb-8 text-center">Building Your Hexagram...</h2>
+            
+            <div id="hexagram-building" class="max-w-xs mx-auto">
+                <div id="line6" class="hexagram-line opacity-0"></div>
+                <div id="line5" class="hexagram-line opacity-0"></div>
+                <div id="line4" class="hexagram-line opacity-0"></div>
+                <div id="line3" class="hexagram-line opacity-0"></div>
+                <div id="line2" class="hexagram-line opacity-0"></div>
+                <div id="line1" class="hexagram-line opacity-0"></div>
+            </div>
+
+            <div id="line-label" class="text-center text-amber-200 mt-6 h-8"></div>
+        </div>
+
+        <!-- Step 5: Result -->
+        <div id="step5" class="hidden">
+            <div class="card rounded-2xl p-8 fade-in">
+                <div class="text-center mb-8">
+                    <p class="text-amber-200/80 mb-2" id="category-label">YOUR READING</p>
+                    <h2 id="hexagram-title" class="title-font text-3xl text-amber-300 mb-2">Hexagram 1: QIAN</h2>
+                    <p id="hexagram-subtitle" class="text-xl text-amber-100 italic">The Creative • Pure Force</p>
+                </div>
+
+                <div class="max-w-xs mx-auto mb-8 pulse-glow p-6 rounded-xl">
+                    <div id="result-hexagram"></div>
+                </div>
+
+                <div id="question-recap" class="bg-black/20 rounded-xl p-4 mb-8">
+                    <p class="text-amber-200/80 text-sm">Your question:</p>
+                    <p id="user-question" class="text-amber-100 italic"></p>
+                </div>
+
+                <div id="reading-content" class="space-y-8">
+                    <div>
+                        <h3 class="title-font text-xl text-amber-300 mb-3">What the Universe Is Saying</h3>
+                        <p id="reading-intro" class="text-lg leading-relaxed"></p>
+                    </div>
+
+                    <div>
+                        <h3 class="title-font text-xl text-amber-300 mb-3">For Your Situation</h3>
+                        <p id="reading-detail" class="text-lg leading-relaxed"></p>
+                    </div>
+
+                    <div class="bg-amber-500/10 rounded-xl p-6">
+                        <h3 class="title-font text-xl text-amber-300 mb-4">✨ Your 3 Action Items</h3>
+                        <ul id="reading-actions" class="space-y-3 text-lg"></ul>
+                    </div>
+                </div>
+
+                <div class="flex justify-center gap-4 mb-8">
+                    <button onclick="shareToReddit()" class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm transition-colors">
+                        ↗ Share to Reddit
+                    </button>
+                    <button onclick="shareToTwitter()" class="bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-lg text-sm transition-colors">
+                        ↗ Share to X
+                    </button>
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-amber-500/20 space-y-4">
+                    <div class="text-center">
+                        <button onclick="startOver()" class="btn-primary title-font text-lg px-8 py-3 rounded-xl text-amber-900 font-bold">
+                            Another Reading
+                        </button>
+                    </div>
+                    
+                    <p class="text-center text-sm text-amber-200/60 italic">
+                        "The I Ching does not compel. It offers insight. Your choices remain your own."
+                    </p>
+                    
+                    <div class="text-center text-xs text-amber-200/40 mt-4">
+                        <p>This tool is for entertainment and decision support only.</p>
+                        <p>The I Ching reveals patterns, not predetermined futures.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card rounded-2xl p-6 mt-6 text-center">
+                <p class="text-amber-200/80 text-sm">Want deeper readings, relationship guidance, or daily wisdom?</p>
+                <p class="title-font text-amber-300 text-lg mt-2">Premium Readings Coming Soon</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const categoryLabels = {
+            career: "CAREER & WORK READING",
+            relationship: "RELATIONSHIP & LOVE READING",
+            finance: "FINANCE & MONEY READING",
+            health: "HEALTH & WELLBEING READING",
+            general: "LIFE GUIDANCE READING",
+            decision: "DECISION GUIDANCE READING"
+        };
+
+        const hexagramsData = {
+            3: {
+                name: "ZHUN",
+                subtitle: "Difficulty at the Beginning • Sprouting",
+                career: {
+                    intro: "Your project is pushing through the soil, finding its way upward through the dark. This is the hardest phase.",
+                    detail: "A seed pushing through earth faces tremendous pressure. It cannot see the sun, cannot know what awaits. Yet it pushes anyway. This is where you are. Your idea is good, but the birth is painful. Don't give up at the first resistance — that's just the soil holding you before you break through.",
+                    actions: [
+                        "Break your big goal into the smallest possible next step — just do that one thing",
+                        "Expect delays and setbacks — they're normal for this phase, not signs of failure",
+                        "Find one person who has sprouted before you — ask for 15 minutes of their time"
+                    ]
+                },
+                relationship: {
+                    intro: "A new connection is struggling to be born. Be patient with both yourself and the other person.",
+                    detail: "New relationships, like seeds, need careful tending. You can't rush a seed by digging it up every day to check. What feels slow or stuck right now is actually roots growing down where you can't see them.",
+                    actions: [
+                        "Don't force the conversation — sometimes the kindest thing is to wait",
+                        "Be honest about your uncertainty — vulnerability builds trust",
+                        "Practice being okay with not knowing where this goes"
+                    ]
+                },
+                finance: {
+                    intro: "Financial growth is slower than you hoped. This is the planting phase, not the harvest.",
+                    detail: "You cannot plant a seed and demand fruit the next day. Your current financial situation is in the underground phase. Trust that work is happening that you cannot yet see.",
+                    actions: [
+                        "Conserve resources — this is not the time for big risks",
+                        "Keep making small, regular contributions to savings",
+                        "Don't check your investments daily — it creates anxiety"
+                    ]
+                },
+                health: {
+                    intro: "Your body is rebuilding. Progress will feel slow. Be gentle with yourself.",
+                    detail: "Healing, like growth, happens in its own time. You cannot rush recovery by pushing harder. Paradoxically, you speed it up by accepting its slowness.",
+                    actions: [
+                        "Set tiny health goals — 5 minutes of walking, not 30",
+                        "Celebrate small improvements rather than focusing on how far you have to go",
+                        "Get more rest than you think you need"
+                    ]
+                },
+                general: {
+                    intro: "You are at the very beginning of something important. The first push is always the hardest.",
+                    detail: "This hexagram reminds us that every oak tree was once an acorn struggling in the dark. Your current difficulty is not a sign you're on the wrong path — it's the very experience of being on a path that matters.",
+                    actions: [
+                        "Just start — don't wait for perfect conditions",
+                        "Ask for help — seeds need water and sunlight, not just willpower",
+                        "Accept that chaos is normal at the beginning"
+                    ]
+                },
+                decision: {
+                    intro: "The path forward is unclear. You don't have enough information yet to decide well.",
+                    detail: "When facing a decision and Difficulty at the Beginning appears, it means you're trying to see too far ahead. You don't need the whole path — you just need the next step.",
+                    actions: [
+                        "Make the smallest possible decision rather than the big one",
+                        "Test your choice on a tiny scale first",
+                        "Give yourself permission to course-correct later"
+                    ]
+                }
+            },
+            5: {
+                name: "XU",
+                subtitle: "Waiting • Nourishment",
+                career: {
+                    intro: "The timing is not yet right. You must wait — but waiting doesn't mean doing nothing.",
+                    detail: "The ancient Chinese understood waiting as an active virtue, not a passive one. While you wait for the right moment professionally, you can be preparing, learning, and building strength.",
+                    actions: [
+                        "List three skills you can develop while you wait — start one today",
+                        "Don't force a promotion or new job — timing matters more than effort here",
+                        "Network without an agenda — just have conversations"
+                    ]
+                },
+                relationship: {
+                    intro: "Patience is required. Something important is developing but not yet ready to be seen.",
+                    detail: "Good relationships cannot be rushed. If you're single, waiting doesn't mean being passive — it means becoming the kind of person you want to attract.",
+                    actions: [
+                        "Work on yourself rather than searching externally",
+                        "Don't push someone for clarity they don't have yet",
+                        "Trust that what's meant for you will come"
+                    ]
+                },
+                finance: {
+                    intro: "Consolidation and patience. This is a holding pattern, not a reversal.",
+                    detail: "Sometimes the best financial move is to make no move at all. Like a predator waiting for the right moment, sometimes you just hold position.",
+                    actions: [
+                        "Maintain your current position — don't make big changes",
+                        "Build up cash reserves while you wait",
+                        "Research opportunities but don't act on them yet"
+                    ]
+                },
+                health: {
+                    intro: "Your body needs time. Healing cannot be rushed.",
+                    detail: "Western medicine teaches us to attack illness. The I Ching teaches us to nourish health. Sometimes the body just needs time and gentle support.",
+                    actions: [
+                        "Prioritize sleep above all else",
+                        "Eat simply — your body doesn't need exotic superfoods, it needs consistent nutrition",
+                        "Be patient — healing happens in its own rhythm"
+                    ]
+                },
+                general: {
+                    intro: "A period of waiting is upon you. This is not stagnation — it's preparation.",
+                    detail: "There are seasons for action and seasons for waiting. You are in the latter. Use this time well, and when the moment comes, you'll be ready.",
+                    actions: [
+                        "Use this time for preparation, not forcing outcomes",
+                        "Develop patience as an active practice",
+                        "Notice what feels like nourishment and what feels like depletion"
+                    ]
+                },
+                decision: {
+                    intro: "Wait. The answer will become clearer with time, not with more thinking.",
+                    detail: "When Waiting appears for a decision, the universe is telling you that you don't have enough information yet. Don't force a choice — let circumstances reveal themselves.",
+                    actions: [
+                        "Set a date to revisit this decision, but don't decide before then",
+                        "Gather more information rather than choosing now",
+                        "The right choice will make itself obvious when the time comes"
+                    ]
+                }
+            },
+            6: {
+                name: "SONG",
+                subtitle: "Conflict • Argument",
+                career: {
+                    intro: "Conflict is brewing at work. Face it consciously, don't avoid it — but don't escalate either.",
+                    detail: "Most workplace conflict comes from unspoken expectations. This hexagram doesn't say you should fight — it says you should see the conflict clearly before deciding whether to engage.",
+                    actions: [
+                        "Write down exactly what the conflict is about — you may discover it's smaller than you think",
+                        "Have the difficult conversation before resentment builds",
+                        "Consider whether winning this argument is worth losing the relationship"
+                    ]
+                },
+                relationship: {
+                    intro: "A disagreement or underlying tension needs to be addressed openly.",
+                    detail: "The worst thing you can do with relationship conflict is pretend it doesn't exist. Unresolved arguments don't disappear — they go underground and poison things from below.",
+                    actions: [
+                        "Use 'I feel...' statements rather than 'You always...'",
+                        "Pick your timing — don't have difficult conversations when tired or hungry",
+                        "Remember you're on the same team facing the problem together"
+                    ]
+                },
+                finance: {
+                    intro: "A financial disagreement or dilemma. Be careful — winning the battle might cost you the war.",
+                    detail: "When money and relationships mix, things get complicated. Ask yourself: what are you actually fighting for?",
+                    actions: [
+                        "Consider what you might lose by winning this fight",
+                        "Get a neutral third party's perspective",
+                        "Sometimes the financially worse choice is the humanly better choice"
+                    ]
+                },
+                health: {
+                    intro: "Your body and mind are in conflict. One is pushing, the other is saying stop.",
+                    detail: "Many health issues arise from internal conflict. Your mind says 'keep going' while your body says 'enough.'",
+                    actions: [
+                        "Notice where in your body you feel tension — that's where the conflict lives",
+                        "Stop pushing through and actually rest",
+                        "Consider what you're fighting against internally"
+                    ]
+                },
+                general: {
+                    intro: "You're in conflict, either with someone else or within yourself. The first step is seeing it clearly.",
+                    detail: "Conflict itself is not bad — it's information. It tells you where boundaries need to be set, where values differ, where growth needs to happen.",
+                    actions: [
+                        "Ask: 'What is this conflict really about?' — it's almost never about the surface issue",
+                        "Decide whether this is worth fighting for",
+                        "Choose your battles wisely — not every hill is worth dying on"
+                    ]
+                },
+                decision: {
+                    intro: "There's no clear winner here. Any choice will involve conflict and compromise.",
+                    detail: "When Conflict appears for a decision, know that no option is clean. Each path comes with friction. Your job isn't to find a frictionless path — it's to find which friction you can live with.",
+                    actions: [
+                        "Acknowledge that neither choice is perfect",
+                        "Choose the conflict you're more willing to live with",
+                        "Don't expect anyone to be completely happy with your decision"
+                    ]
+                }
+            },
+            7: {
+                name: "SHI",
+                subtitle: "The Army • Discipline",
+                career: {
+                    intro: "Your project needs structure, discipline, and a clear chain of command. An army doesn't win by being friendly.",
+                    detail: "Great ideas fail without execution discipline. This is the hexagram of building something that lasts. It requires process, accountability, and sometimes hard decisions.",
+                    actions: [
+                        "Define clear roles — who does what by when?",
+                        "Stop doing everything yourself — delegate or automate",
+                        "Create one process that will outlast your personal effort"
+                    ]
+                },
+                relationship: {
+                    intro: "Your relationship needs structure, not just feeling. Love without boundaries destroys itself.",
+                    detail: "The Army in relationships doesn't mean being cold — it means being reliable. Showing up consistently, keeping your word, having clear boundaries.",
+                    actions: [
+                        "Keep the small promises — they build the foundation",
+                        "Set clear boundaries and enforce them gently but consistently",
+                        "Be the person others can count on, not just the fun person"
+                    ]
+                },
+                finance: {
+                    intro: "Financial discipline is required. Spontaneity now leads to problems later.",
+                    detail: "Building wealth is boring — it's about consistent small actions over long periods. No get-rich-quick scheme replaces the steady discipline of saving, investing, and living within means.",
+                    actions: [
+                        "Automate your savings so you don't have to willpower it",
+                        "Review one subscription or recurring expense today",
+                        "Make a budget — not to restrict, but to know where your money goes"
+                    ]
+                },
+                health: {
+                    intro: "Consistency beats intensity. The Army marches every day — it doesn't sprint once a month.",
+                    detail: "Health is built by daily small choices, not occasional heroic efforts. A 10-minute walk every day beats a 2-hour gym session once a week.",
+                    actions: [
+                        "Pick one health habit and do it every single day — even if tiny",
+                        "Stop chasing perfect workouts and start showing up imperfectly",
+                        "Health is a campaign, not a battle — think in weeks and months, not days"
+                    ]
+                },
+                general: {
+                    intro: "This is a time for disciplined action, not hoping things will work out.",
+                    detail: "The Army hexagram reminds us that freedom comes from discipline. The more structure you build now, the more freedom you'll have later.",
+                    actions: [
+                        "Create one routine that removes the need for willpower",
+                        "Stop relying on motivation — rely on systems instead",
+                        "Ask: 'What would a well-organized person do here?' — then do that"
+                    ]
+                },
+                decision: {
+                    intro: "Make a decision and then commit to it fully. Analysis paralysis is your enemy now.",
+                    detail: "When facing a decision and The Army appears, it means you've thought enough. Now you need to choose and then execute with discipline. Waffling weakens everything.",
+                    actions: [
+                        "Set a deadline for your decision and stick to it",
+                        "Once decided, stop second-guessing",
+                        "Commit to your choice for at least 30 days before reconsidering"
+                    ]
+                }
+            },
+            9: {
+                name: "XIAO CHU",
+                subtitle: "The Taming Power of the Small • Small Accumulation",
+                career: {
+                    intro: "Small, consistent efforts are building toward something big. Don't despise the tiny steps.",
+                    detail: "This hexagram teaches that great things come from small actions repeated daily. You don't need a breakthrough — you need incremental progress that compounds.",
+                    actions: [
+                        "Do one tiny thing every day toward your goal — 15 minutes is enough",
+                        "Celebrate small wins — they accumulate",
+                        "Don't quit because results aren't yet visible"
+                    ]
+                },
+                relationship: {
+                    intro: "Small acts of kindness and attention are healing your connection. Grand gestures aren't needed right now.",
+                    detail: "Relationships thrive on micro-moments — a thoughtful text, a listening ear, remembering small details. These accumulate into something deep and enduring.",
+                    actions: [
+                        "Do one small, unexpected kindness today",
+                        "Notice and acknowledge something small your partner does",
+                        "The little things ARE the big things"
+                    ]
+                },
+                finance: {
+                    intro: "Small savings compound. Stop waiting for the windfall — start where you are.",
+                    detail: "Everyone wants the big score. But real wealth is built $50 at a time, consistently, over years. The Taming Power of the Small is about patient accumulation.",
+                    actions: [
+                        "Automate even a tiny amount to savings every payday",
+                        "Cut one small unnecessary expense today",
+                        "Stop checking for 'get rich quick' opportunities"
+                    ]
+                },
+                health: {
+                    intro: "Tiny lifestyle changes, consistently applied, yield huge health results.",
+                    detail: "People want the perfect diet, the perfect workout. But health comes from: drinking one more glass of water, sleeping 15 minutes earlier, walking 5 minutes more.",
+                    actions: [
+                        "Change just one tiny health habit this week",
+                        "Add — don't remove. Add one healthy thing rather than banning unhealthy things",
+                        "Do that new thing at the same time every day so it becomes automatic"
+                    ]
+                },
+                general: {
+                    intro: "This is not a time for grand gestures. It's a time for patient, small, daily actions.",
+                    detail: "We live in a culture that glorifies disruption and overnight success. But the I Ching reminds us that most meaningful change happens slowly, invisibly, one small step at a time.",
+                    actions: [
+                        "Focus on systems, not goals — systems win every time",
+                        "Be patient with yourself — change takes time",
+                        "Do less, but do it more consistently"
+                    ]
+                },
+                decision: {
+                    intro: "Don't make a big decision now. Make small adjustments and see how things develop.",
+                    detail: "When Small Accumulation appears for a decision, it means the information available only supports small moves, not big commitments. Test the waters with small steps.",
+                    actions: [
+                        "Make the smallest possible commitment rather than a big one",
+                        "You can always increase your commitment later if it goes well",
+                        "Watch for how things develop before deciding fully"
+                    ]
+                }
+            },
+            10: {
+                name: "LÜ",
+                subtitle: "Treading • Following a Path",
+                career: {
+                    intro: "You're walking a delicate path. Proceed carefully but confidently.",
+                    detail: "Treading shows someone stepping carefully behind a tiger that doesn't bite them. Sometimes at work, you need to navigate delicate situations — and you can, if you're careful.",
+                    actions: [
+                        "Watch your step — proceed carefully this week",
+                        "Observe power dynamics before acting",
+                        "You can walk through dangerous territory if you tread lightly"
+                    ]
+                },
+                relationship: {
+                    intro: "You're learning how to be together. Follow the path with awareness.",
+                    detail: "Every relationship has its own dance. Step on toes occasionally. Learn. Adjust. Continue. This is how two people learn to move together.",
+                    actions: [
+                        "Notice when you step on each other's toes — and apologize",
+                        "Learn each other's rhythms",
+                        "Relationships are practiced, not perfect"
+                    ]
+                },
+                finance: {
+                    intro: "Step carefully with money right now. This is not a time for bold moves.",
+                    detail: "When Treading appears for finances, it means you're walking on thin ice. Not necessarily bad ice, but ice that requires awareness and care.",
+                    actions: [
+                        "Avoid risky investments right now",
+                        "Watch every outflow — know where your money goes",
+                        "Proceed cautiously rather than boldly"
+                    ]
+                },
+                health: {
+                    intro: "Your body is giving you warning signs. Tread carefully and listen.",
+                    detail: "Health rarely breaks all at once. It gives small warnings first — a twinge, tiredness, mood changes. Treading means noticing these signals before they become serious.",
+                    actions: [
+                        "Listen to what your body is telling you — don't push through",
+                        "Slow down before you have to",
+                        "Small preventive steps now avoid big problems later"
+                    ]
+                },
+                general: {
+                    intro: "You're on a path. Keep walking — mindfully, carefully, confidently.",
+                    detail: "The most important thing in life is simply to keep walking. Not fast, not slow, just walking — aware of each step, adjusting as you go, continuing forward.",
+                    actions: [
+                        "Stay present to each step — don't just focus on the destination",
+                        "Adjust your gait as needed — flexibility matters",
+                        "Just keep walking — momentum solves most problems"
+                    ]
+                },
+                decision: {
+                    intro: "Step carefully into your decision. You don't need to jump — you can step in gradually.",
+                    detail: "Treading teaches us that decisions don't have to be all-or-nothing. You can test one foot in, see how it feels, then commit more fully.",
+                    actions: [
+                        "Test the waters with a small first step",
+                        "See how it feels before committing fully",
+                        "You can always step back if needed"
+                    ]
+                }
+            },
+            11: {
+                name: "TAI",
+                subtitle: "Peace • Harmony",
+                career: {
+                    intro: "Everything is flowing. People are aligned. This is a time of great productivity.",
+                    detail: "Peace in a work context doesn't mean nothing is happening — it means everything is working together smoothly. Heaven and Earth are communicating. This alignment creates extraordinary results.",
+                    actions: [
+                        "Strike while the iron is hot — things are flowing, use this energy",
+                        "Communicate openly — the channels are clear",
+                        "Enjoy this period — they don't last forever, so make the most of them"
+                    ]
+                },
+                relationship: {
+                    intro: "Harmony. Easy communication. Good times together. Appreciate them.",
+                    detail: "These are the golden periods of relationships — when things just work, when communication flows without effort, when being together feels easy rather than hard. Don't take them for granted.",
+                    actions: [
+                        "Express gratitude — tell your partner you appreciate how good things feel right now",
+                        "Do something special together — mark this good period",
+                        "Know that difficult times will come, but so will more peace"
+                    ]
+                },
+                finance: {
+                    intro: "Abundance and flow. Money comes easily. Use this period wisely.",
+                    detail: "In Chinese, 'Tai' means peace and prosperity. When money flows easily, it's tempting to spend freely. The wise person saves during abundance so they have reserves in scarcity.",
+                    actions: [
+                        "Pay down debt during the good times",
+                        "Save a portion — don't increase your lifestyle to match increased income",
+                        "Enjoy some, but preserve for the future"
+                    ]
+                },
+                health: {
+                    intro: "Your body is in balance. Everything is working as it should. Maintain this state.",
+                    detail: "Most of the time, health isn't about fixing what's broken — it's about maintaining what's working. When you feel good, that's the time to solidify the habits that got you there.",
+                    actions: [
+                        "Notice what's working for your health right now",
+                        "Solidify those good habits",
+                        "Don't take good health for granted"
+                    ]
+                },
+                general: {
+                    intro: "This is one of the most fortunate hexagrams. All elements are in harmony. Flow with it.",
+                    detail: "Peace doesn't mean nothing is happening — it means everything is happening in the right way. Heaven and Earth meet, above and below communicate, all things come together.",
+                    actions: [
+                        "Move forward confidently — the universe supports you right now",
+                        "Be generous — when you're in flow, help others find theirs",
+                        "Know that this, too, will change — enjoy it while it lasts"
+                    ]
+                },
+                decision: {
+                    intro: "Move forward — the path is clear and harmonious. This is an easy yes.",
+                    detail: "When Peace appears for a decision, the universe is giving you a clear green light. The path ahead is harmonious, the people involved are aligned, things will flow smoothly.",
+                    actions: [
+                        "You have the green light — proceed",
+                        "Things will go more smoothly than you expect",
+                        "This is a fortunate time to act"
+                    ]
+                }
+            },
+            12: {
+                name: "PI",
+                subtitle: "Standstill • Stagnation",
+                career: {
+                    intro: "Progress has stopped. Communication is blocked. This is not the time to push forward.",
+                    detail: "Standstill is Peace's opposite — Heaven and Earth no longer communicate. At work, this means initiatives stall, emails go unanswered, projects you've pushed for just sit. Pushing harder only makes the stagnation worse.",
+                    actions: [
+                        "Stop pushing — force only increases resistance",
+                        "Work on internal things rather than external initiatives",
+                        "Wait for the blockage to clear on its own"
+                    ]
+                },
+                relationship: {
+                    intro: "Communication is blocked. Nothing is getting through. Give it space.",
+                    detail: "Sometimes in relationships, words become useless. Everything you say is misinterpreted, everything they say lands wrong. This is the standstill — and the only way through is to stop talking and wait.",
+                    actions: [
+                        "Stop trying to explain — words won't work right now",
+                        "Give each other space — the blockage will pass",
+                        "Actions speak louder when words fail — do something kind without explanation"
+                    ]
+                },
+                finance: {
+                    intro: "Money is stuck. Investments aren't moving. Don't force anything.",
+                    detail: "Financial stagnation is frustrating — you want things to move, to grow, to change. But during Standstill, the worst thing you can do is force action. That usually means losing money.",
+                    actions: [
+                        "Don't invest in new things right now",
+                        "Preserve capital — cash is king during stagnation",
+                        "Wait for movement before committing"
+                    ]
+                },
+                health: {
+                    intro: "Your body is stuck. Energy isn't flowing. Gentle movement helps, force hurts.",
+                    detail: "The body, too, can experience standstill — energy stuck, digestion slow, recovery halted. During these periods, intense exercise backfires. Gentle movement helps.",
+                    actions: [
+                        "Try gentle movement — walking, stretching, yoga",
+                        "Avoid intense workouts — they'll make the stagnation worse",
+                        "Sometimes the body just needs time to reorganize"
+                    ]
+                },
+                general: {
+                    intro: "Nothing is moving forward. This is a time to turn inward, not push outward.",
+                    detail: "Standstill feels like failure to our action-oriented culture. But the I Ching teaches that stagnation is a necessary part of the cycle. It's winter — the seed is underground, gathering strength before spring.",
+                    actions: [
+                        "Turn inward — work on yourself rather than external projects",
+                        "Read, learn, reflect — this is inner growth time",
+                        "Trust that the standstill will end when it's time"
+                    ]
+                },
+                decision: {
+                    intro: "Don't decide right now. The situation is blocked and clarity won't come until it unblocks.",
+                    detail: "When Standstill appears for a decision, it means you don't have clarity because the situation itself doesn't have clarity. Any decision you make now will be based on incomplete information.",
+                    actions: [
+                        "Delay the decision if at all possible",
+                        "Don't force clarity that isn't there",
+                        "Wait — the blockage will pass, and then you'll know what to do"
+                    ]
+                }
+            },
+            13: {
+                name: "TONG REN",
+                subtitle: "Fellowship with Men • Community",
+                career: {
+                    intro: "You don't have to do this alone. Find your people — success comes through community.",
+                    detail: "Fellowship reminds us that the lone genius is a myth. Every great achievement is built by a community of people sharing the same direction. Find yours.",
+                    actions: [
+                        "Join or form a group of people with similar goals",
+                        "Share what you're working on — don't work in secret",
+                        "Help others first — community is about giving, not just taking"
+                    ]
+                },
+                relationship: {
+                    intro: "Your partner is your ally, not your opponent. You're on the same team.",
+                    detail: "Relationship problems often come from seeing each other as adversaries rather than fellows facing life together. Fellowship means remembering: we're both trying our best.",
+                    actions: [
+                        "Remind yourself: 'We're on the same team'",
+                        "Fight the problem together, not each other",
+                        "Look for where you agree rather than where you differ"
+                    ]
+                },
+                finance: {
+                    intro: "Financial wisdom comes from surrounding yourself with people further ahead than you.",
+                    detail: "You are the average of the five people you spend most time with — financially as much as anything else. Fellowship with people who have good money habits will improve yours.",
+                    actions: [
+                        "Find people who are where you want to be financially",
+                        "Ask them questions — most people love to share what they've learned",
+                        "Avoid financial advice from people who don't have results you want"
+                    ]
+                },
+                health: {
+                    intro: "Health goals are easier with company. Find a workout buddy, join a class.",
+                    detail: "Willpower is a finite resource. But when you show up for someone else — when they're waiting for you at the gym — you show up even when you don't feel like it.",
+                    actions: [
+                        "Find one person to do health things with regularly",
+                        "Join a class or group — accountability works",
+                        "Be the person who encourages others"
+                    ]
+                },
+                general: {
+                    intro: "This is a time for connection, competition is over. Find your tribe, build your community.",
+                    detail: "Humans evolved to live in bands. We're not meant to face life alone. Yet modern life increasingly isolates us. Fellowship is the antidote — finding people who share your values and direction.",
+                    actions: [
+                        "Reach out to someone you feel connected to",
+                        "Be the one who organizes — don't wait for someone else",
+                        "Build community in small, regular ways"
+                    ]
+                },
+                decision: {
+                    intro: "Talk it through with people you respect before deciding. Their perspective adds clarity.",
+                    detail: "When Fellowship appears for a decision, it means the best thing you can do is consult others. Not because they'll make the decision for you, but because talking it through reveals dimensions you missed.",
+                    actions: [
+                        "Get at least two other perspectives before choosing",
+                        "Choose people who will tell you the truth, not what you want to hear",
+                        "You don't have to take their advice, but you need to hear it"
+                    ]
+                }
+            },
+            8: {
+                name: "BI",
+                subtitle: "Holding Together • Union",
+                career: {
+                    intro: "Success now depends on alignment with others. Lone wolves starve; teams thrive.",
+                    detail: "You cannot build something meaningful alone. This hexagram asks you to look at your professional relationships — who are you aligned with? Who has complementary strengths?",
+                    actions: [
+                        "Identify one person you can partner with rather than compete against",
+                        "Ask colleagues: 'What do you need from me that I'm not giving?'",
+                        "Share credit generously — it makes everyone stronger"
+                    ]
+                },
+                relationship: {
+                    intro: "Your connection needs active nurturing. Holding together requires effort from both sides.",
+                    detail: "Relationships aren't something you get — they're something you do, every single day. Small consistent acts of connection build the bonds that survive life's storms.",
+                    actions: [
+                        "Do one small, thoughtful thing for your partner today without being asked",
+                        "Have a 'check-in' conversation about how the relationship itself is doing",
+                        "If single, invest in platonic relationships — they matter too"
+                    ]
+                },
+                finance: {
+                    intro: "Financial decisions affect others. Don't make big money choices in isolation.",
+                    detail: "Money is never just money — it's security, freedom, power, care. When financial decisions involve others, they need to be made together.",
+                    actions: [
+                        "Have a money conversation with anyone financially connected to you",
+                        "Be transparent about financial fears — they grow in darkness",
+                        "Build shared goals rather than individual ones"
+                    ]
+                },
+                health: {
+                    intro: "Your health is connected to your relationships. Loneliness makes the body sick.",
+                    detail: "The latest research confirms what the I Ching has known for 3000 years — human connection is foundational to health. Isolation accelerates every disease process.",
+                    actions: [
+                        "Prioritize one in-person connection this week",
+                        "Join a group activity where you see people regularly",
+                        "Call someone you haven't spoken to in a while"
+                    ]
+                },
+                general: {
+                    intro: "You don't have to do this alone. Holding together with others makes everyone stronger.",
+                    detail: "We glorify the self-made person, but no one is truly self-made. Every successful person stands on a network of relationships. Build yours intentionally.",
+                    actions: [
+                        "Reach out to one person who helped you — tell them thank you",
+                        "Offer help to someone without expecting anything in return",
+                        "Be the glue in your circle — the one who checks in and brings people together"
+                    ]
+                },
+                decision: {
+                    intro: "Don't decide alone. Talk it through with people you trust before choosing.",
+                    detail: "When Holding Together appears for a decision, it means your choice affects others more than you realize. Even if you ultimately make the call alone, you need the input of those who will live with the consequences.",
+                    actions: [
+                        "Identify everyone affected by this decision",
+                        "Ask for their perspective before choosing",
+                        "Explain your reasoning afterward — even if they disagree"
+                    ]
+                }
+            },
+            1: {
+                name: "QIAN",
+                subtitle: "The Creative • Pure Force",
+                career: {
+                    intro: "Pure, unstoppable forward momentum. The universe is handing you the green light in your professional life.",
+                    detail: "The dragon is rising in your career. Everything you start now carries exceptional power for success. But remember — even the strongest dragon must know when to rest. Build steadily, don't burn out in the first burst of enthusiasm.",
+                    actions: [
+                        "Schedule that important meeting you've been delaying",
+                        "Launch that project idea this week — the timing is perfect",
+                        "Block time in your calendar for rest — you'll need it later"
+                    ]
+                },
+                relationship: {
+                    intro: "Passion and attraction running high in your love life. Powerful energies are at play.",
+                    detail: "If you're single, someone dynamic and ambitious may soon enter your life. If you're in a relationship, this is a time to take things to the next level — but be careful not to steamroll your partner.",
+                    actions: [
+                        "Ask that person out — timing is perfect",
+                        "Plan a bold date night if you're in a relationship",
+                        "Practice listening more than speaking"
+                    ]
+                },
+                finance: {
+                    intro: "Expansion phase. High risk, high reward. Your financial energy is building rapidly.",
+                    detail: "Investments made now have above-average potential for growth. But with great opportunity comes great volatility — don't bet everything on one play.",
+                    actions: [
+                        "Invest 70% conservatively, 30% in growth opportunities",
+                        "Don't lend money to anyone right now — it won't come back",
+                        "Review your emergency fund and ensure it's solid"
+                    ]
+                },
+                health: {
+                    intro: "High energy, but watch for burnout. Your vitality is strong but needs wise management.",
+                    detail: "Your physical energy is at a peak, but this can lead to overexertion. The Creative doesn't mean endless pushing — it means knowing when to rest.",
+                    actions: [
+                        "Start that new exercise routine today — momentum favors you",
+                        "But schedule rest days — don't go all out every day",
+                        "Get a check-up — better to know than assume"
+                    ]
+                },
+                general: {
+                    intro: "You are in a time of pure creative power. The universe supports bold action.",
+                    detail: "This is one of the most powerful hexagrams. Everything in your life is aligned for forward movement. Your ideas have weight, your actions carry force.",
+                    actions: [
+                        "Start at least one new thing this week — it has high chance of success",
+                        "Trust your instincts — they're unusually sharp right now",
+                        "Don't waste this energy on small worries — think big"
+                    ]
+                },
+                decision: {
+                    intro: "The answer is YES — move forward boldly. The Creative confirms your direction.",
+                    detail: "When you receive this hexagram for a decision, the universe is giving you a clear green light. The path you're considering has genuine momentum behind it.",
+                    actions: [
+                        "Make the decision today — don't delay",
+                        "Start taking action on it this week",
+                        "Have a backup plan, but trust the primary path"
+                    ]
+                }
+            },
+            2: {
+                name: "KUN",
+                subtitle: "The Receptive • Devotion",
+                career: {
+                    intro: "It's time to pause, receive, and nurture at work. Not every moment is for pushing forward.",
+                    detail: "Stop forcing projects to happen before their time. The earth doesn't push the seed to grow; it nourishes and waits.",
+                    actions: [
+                        "Cancel that aggressive timeline — give things room to develop",
+                        "Ask your team: 'What do you need from me right now?'",
+                        "Focus on improving systems, not launching new things"
+                    ]
+                },
+                relationship: {
+                    intro: "Deep emotional connection and support are needed now. Be present, not active.",
+                    detail: "This is a time for being with your partner, not doing things for your partner. Great relationships aren't built on grand gestures.",
+                    actions: [
+                        "Tonight, ask 'How was your day?' and actually listen without interrupting",
+                        "Plan a quiet evening in — no phones, no distractions",
+                        "If single, focus on loving yourself first"
+                    ]
+                },
+                finance: {
+                    intro: "Consolidation, not expansion. Hold tight to what you have.",
+                    detail: "This is not the time for new investments or big purchases. Think of it as financial winter — you preserve resources.",
+                    actions: [
+                        "Pause all new investment decisions for 30 days",
+                        "Pay down debt — this will compound better than any investment",
+                        "Review subscriptions and cut anything unused"
+                    ]
+                },
+                health: {
+                    intro: "Rest and recovery. Your body is asking for gentle care, not intense effort.",
+                    detail: "This is a time for gentle yoga, not heavy lifting. For long walks, not sprinting. Your body needs to replenish.",
+                    actions: [
+                        "Take a rest day — even if you 'don't feel like you need one'",
+                        "Try gentle stretching, meditation, or a walk in nature",
+                        "Get an extra hour of sleep each night this week"
+                    ]
+                },
+                general: {
+                    intro: "This is a time of being, not doing. The universe asks you to receive, not push.",
+                    detail: "Western culture teaches us to always be pushing. But wisdom knows there are seasons for everything. Right now, the season is receptive.",
+                    actions: [
+                        "Spend time in nature this week — feel the rhythm of slow growth",
+                        "Practice saying 'yes' to what comes, rather than forcing what you want",
+                        "Journal about what you're receiving, not just what you're achieving"
+                    ]
+                },
+                decision: {
+                    intro: "Wait — don't decide yet. The answer will become clear in time.",
+                    detail: "When The Receptive appears for a decision, it means you don't have all the information yet.",
+                    actions: [
+                        "Delay the decision for at least a week",
+                        "Gather more information rather than forcing a choice",
+                        "Ask others for their perspective"
+                    ]
+                }
+            },
+            4: {
+                name: "MENG",
+                subtitle: "Youthful Folly • Beginning",
+                career: {
+                    intro: "You're at the beginning in your work, and you don't know what you don't know — and that's perfect.",
+                    detail: "Every master was once a disaster. Your current lack of knowledge isn't a flaw; it's your biggest opportunity.",
+                    actions: [
+                        "Find a mentor and ask: 'What's one thing I should stop doing right now?'",
+                        "Take that course or read that book — invest in learning",
+                        "Admit when you don't know something — people will respect your honesty"
+                    ]
+                },
+                relationship: {
+                    intro: "New connections, naive expectations, and a learning curve — embrace it.",
+                    detail: "New relationships are beautiful precisely because they're untested. Don't expect perfection.",
+                    actions: [
+                        "Have the 'what are we?' conversation if you've been avoiding it",
+                        "Be vulnerable — share something real about yourself",
+                        "Stop comparing your relationship to social media"
+                    ]
+                },
+                finance: {
+                    intro: "Learning the basics, making beginner mistakes — this is how wisdom starts.",
+                    detail: "Your current financial situation isn't a reflection of your worth — it's a reflection of your current level of financial literacy.",
+                    actions: [
+                        "Start with the basics: track every dollar for 30 days",
+                        "Read one beginner book on personal finance this month",
+                        "Find someone 5 years ahead of you and buy them coffee"
+                    ]
+                },
+                health: {
+                    intro: "A new beginning in health matters. Start where you are, not where you think you should be.",
+                    detail: "Don't be discouraged that you're starting over. The fact that you're seeking guidance means you're already ahead.",
+                    actions: [
+                        "Start small — just 10 minutes of exercise is better than nothing",
+                        "Learn the basics of nutrition — don't jump into extreme diets",
+                        "Be patient with your progress — health builds slowly"
+                    ]
+                },
+                general: {
+                    intro: "You are in the beginner's mind phase. This is actually the most powerful place to be.",
+                    detail: "The Zen masters call this 'Shoshin' — beginner's mind. When you know you don't know, you're open to everything.",
+                    actions: [
+                        "Approach this week with curiosity rather than judgment",
+                        "Ask 'why?' at least five times about things you usually take for granted",
+                        "Try something completely new that you know nothing about"
+                    ]
+                },
+                decision: {
+                    intro: "You don't have enough information to decide well. Seek guidance first.",
+                    detail: "Youthful Folly in a decision means you're operating from incomplete understanding. Find someone who has been where you are.",
+                    actions: [
+                        "Find at least one person who has faced this decision before",
+                        "Ask them not what to do, but what to watch out for",
+                        "Delay the final choice until you've gathered perspective"
+                    ]
+                }
+            }
+        };
+
+        const defaultReadings = {
+            career: {
+                intro: "A unique professional pattern is emerging. Stay open and observant.",
+                detail: "Your career path is unfolding in ways you may not yet fully understand. Trust that the patterns of change are working in your favor.",
+                actions: [
+                    "Review your professional goals this week",
+                    "Have one meaningful conversation with a colleague",
+                    "Document your current wins and challenges"
+                ]
+            },
+            relationship: {
+                intro: "Your connections are evolving. Stay present and open to what's emerging.",
+                detail: "Relationships have their own timing and wisdom. What feels uncertain now may become clear as you simply stay present.",
+                actions: [
+                    "Reach out to someone you care about",
+                    "Practice active listening this week",
+                    "Honor your own needs as well as others'"
+                ]
+            },
+            finance: {
+                intro: "Financial patterns are shifting. Take time to observe before acting.",
+                detail: "Wise financial decisions come from clear observation, not impulsive action.",
+                actions: [
+                    "Review your recent spending patterns",
+                    "Check in on your long-term financial goals",
+                    "Avoid major purchases until the path is clearer"
+                ]
+            },
+            health: {
+                intro: "Your body is communicating. Take time to listen deeply.",
+                detail: "Health wisdom comes from listening to your body's signals, not forcing it to meet external expectations.",
+                actions: [
+                    "Notice how different foods make you feel",
+                    "Get adequate rest this week",
+                    "Take short breaks throughout your day"
+                ]
+            },
+            general: {
+                intro: "A unique pattern is emerging in your life. Stay open to the wisdom of change.",
+                detail: "This moment asks you to look deeper than surface appearances. The path forward may not be obvious yet.",
+                actions: [
+                    "Take time today to reflect on your true priorities",
+                    "Stay open to unexpected guidance",
+                    "Trust that clarity will come at the right time"
+                ]
+            },
+            decision: {
+                intro: "Take time to gather perspective before deciding.",
+                detail: "Important decisions deserve reflection. Don't rush to choose simply because you want certainty.",
+                actions: [
+                    "Write down the pros and cons from multiple angles",
+                    "Sleep on it before deciding",
+                    "Consider what your wisest self would advise"
+                ]
+            }
+        };
+
+        function getReading(hexNumber, type = 'general') {
+            const hex = hexagramsData[hexNumber];
+            if (!hex) {
+                return {
+                    name: `HEXAGRAM ${hexNumber}`,
+                    subtitle: "Ancient Wisdom",
+                    ...defaultReadings[type]
+                };
+            }
+            return {
+                name: hex.name,
+                subtitle: hex.subtitle,
+                ...hex[type]
+            };
+        }
+
+        function getHexagramNumber(numbers) {
+            const sum = numbers.reduce((a, b) => a + b, 0);
+            return (sum % 64) + 1;
+        }
+
+        function goToStep2() {
+            const question = document.getElementById('question').value.trim();
+            if (!question) {
+                alert('Please share your question first');
+                return;
+            }
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
+            document.getElementById('step2').classList.add('fade-in');
+        }
+
+        let selectedCategory = null;
+
+        function selectCategory(category, btn) {
+            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedCategory = category;
+            document.getElementById('categoryNextBtn').disabled = false;
+        }
+
+        function goToStep3() {
+            if (!selectedCategory) {
+                alert('Please select a category first');
+                return;
+            }
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step3').classList.remove('hidden');
+            document.getElementById('step3').classList.add('fade-in');
+        }
+
+        function goToStep4() {
+            const numbers = [];
+            for (let i = 1; i <= 6; i++) {
+                const val = parseInt(document.getElementById('n' + i).value);
+                if (isNaN(val) || val < 0 || val > 9) {
+                    alert('Please enter numbers between 0 and 9');
+                    return;
+                }
+                numbers.push(val);
+            }
+
+            document.getElementById('step3').classList.add('hidden');
+            document.getElementById('step4').classList.remove('hidden');
+            document.getElementById('step4').classList.add('fade-in');
+
+            window.readingData = {
+                question: document.getElementById('question').value,
+                category: selectedCategory,
+                numbers: numbers,
+                hexNumber: getHexagramNumber(numbers)
+            };
+
+            const lineLabels = [
+                "Line 1 — Foundation",
+                "Line 2 — Inner",
+                "Line 3 — Personal",
+                "Line 4 — External", 
+                "Line 5 — Guidance",
+                "Line 6 — Outcome"
+            ];
+
+            let lineIndex = 1;
+            function showLine() {
+                if (lineIndex > 6) {
+                    setTimeout(() => showResult(), 1000);
+                    return;
+                }
+
+                const lineEl = document.getElementById('line' + lineIndex);
+                const isEven = numbers[lineIndex - 1] % 2 === 0;
+                
+                lineEl.classList.add(isEven ? 'line-broken' : 'line-solid');
+                lineEl.classList.remove('opacity-0');
+                
+                document.getElementById('line-label').textContent = lineLabels[lineIndex - 1];
+                
+                lineIndex++;
+                setTimeout(showLine, 1000);
+            }
+
+            setTimeout(showLine, 500);
+        }
+
+        function showResult() {
+            document.getElementById('step4').classList.add('hidden');
+            document.getElementById('step5').classList.remove('hidden');
+            document.getElementById('step5').classList.add('fade-in');
+
+            const data = window.readingData;
+            const hexData = getReading(data.hexNumber, data.category);
+
+            document.getElementById('category-label').textContent = categoryLabels[data.category];
+            document.getElementById('hexagram-title').textContent = `HEXAGRAM ${data.hexNumber}: ${hexData.name}`;
+            document.getElementById('hexagram-subtitle').textContent = hexData.subtitle;
+            document.getElementById('user-question').textContent = data.question;
+
+            const hexagramEl = document.getElementById('result-hexagram');
+            hexagramEl.innerHTML = '';
+            for (let i = 5; i >= 0; i--) {
+                const isEven = data.numbers[i] % 2 === 0;
+                const lineDiv = document.createElement('div');
+                lineDiv.className = `hexagram-line ${isEven ? 'line-broken' : 'line-solid'}`;
+                hexagramEl.appendChild(lineDiv);
+            }
+
+            document.getElementById('reading-intro').textContent = hexData.intro;
+            document.getElementById('reading-detail').textContent = hexData.detail;
+            
+            const actionsEl = document.getElementById('reading-actions');
+            actionsEl.innerHTML = hexData.actions.map(a => `<li class="flex items-start"><span class="text-amber-400 mr-2">•</span>${a}</li>`).join('');
+        }
+
+        function shareToReddit() {
+            const data = window.readingData || {};
+            const title = `I Ching Reading: Hexagram ${data.hexNumber || ''} — ${categoryLabels[data.category] || 'General'}`;
+            const text = `I asked: ${data.question || ''}\n\nGot Hexagram #${data.hexNumber || ''} — ${getReading(data.hexNumber, data.category).subtitle || ''}\n\nTry it yourself → ${window.location.href}`;
+            window.open(`https://www.reddit.com/r/Ichingsubmit?title=${encodeURIComponent(title)}&text=${encodeURIComponent(text)}`, '_blank');
+        }
+
+        function shareToTwitter() {
+            const data = window.readingData || {};
+            const text = `Got Hexagram #${data.hexNumber || ''} — ${getReading(data.hexNumber, data.category).subtitle || ''}\n${categoryLabels[data.category] || ''}\n\nTry the I Ching reading →`;
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(window.location.href)}`, '_blank');
+        }
+
+        function startOver() {
+            document.getElementById('step5').classList.add('hidden');
+            document.getElementById('step1').classList.remove('hidden');
+            document.getElementById('step1').classList.add('fade-in');
+            document.getElementById('question').value = '';
+            selectedCategory = null;
+            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('selected'));
+            document.getElementById('categoryNextBtn').disabled = true;
+            for (let i = 1; i <= 6; i++) {
+                document.getElementById('n' + i).value = '';
+                document.getElementById('line' + i).className = 'hexagram-line opacity-0';
+            }
+        }
+    </script>
+</body>
+</html>
